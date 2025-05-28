@@ -133,6 +133,7 @@ public class BodReminderPlugin extends Plugin
 
 			if (isRunePouchVariant(itemId)) {
 				System.out.println("Pouch identified as ID: " + itemId);
+				System.out.println("Checking item ID: " + itemId + ", name: " + client.getItemDefinition(itemId).getName());
 				Map<Integer, Integer> pouchContents = getRunePouchContents(itemId);
 				if (pouchContents == null) {
 					System.out.println("No readable params for item: " + itemId);
@@ -152,26 +153,46 @@ public class BodReminderPlugin extends Plugin
 		return new RunePouchContents(0, 0, 0);
 	}
 
+	//TODO: Swap to a varbit based approach
 	private Map<Integer, Integer> getRunePouchContents(int itemId) {
 		ItemComposition comp = client.getItemDefinition(itemId);
 		IterableHashTable<Node> rawParams = comp.getParams();
 
-		if (rawParams == null) return null;
+		if (rawParams == null) {
+			System.out.println("Params are null for item ID: " + itemId);
+			return null;
+		}
 
 		Map<Integer, Integer> runeMap = new HashMap<>();
 
 		for (Node node : rawParams) {
-			if (node instanceof IntegerNode) {
-				int key = (int) node.getHash();
-				int value = ((IntegerNode) node).getValue();
+			if (node == null) {
+				System.out.println("Null node encountered");
+				continue;
+			}
 
-				runeMap.put(key, value);
+			System.out.println("Node class: " + node.getClass().getName());
+
+			if (node instanceof IntegerNode) {
+				IntegerNode intNode = (IntegerNode) node;
+
+				try {
+					int key = (int) intNode.getHash();
+					int value = intNode.getValue();
+					System.out.println("Param key: " + key + ", value: " + value);
+				} catch (Exception e) {
+					System.out.println("Error reading param node: " + e.getMessage());
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println("Non-integer node encountered: " + node.getClass());
 			}
 		}
 
 		Map<Integer, Integer> extractedRunes = new HashMap<>();
-		for (int i = 0; i < 4; i++) {
-			int runeIdKey = 1 + i * 2;
+		int slotCount = 4;
+		for (int i = 0; i < slotCount; i++) {
+			int runeIdKey = 1 + (i * 2);
 			int amountKey = runeIdKey + 1;
 
 			if (runeMap.containsKey(runeIdKey) && runeMap.containsKey(amountKey)) {
