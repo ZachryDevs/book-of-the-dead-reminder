@@ -3,6 +3,7 @@ package com.bodReminder;
 import net.runelite.api.Client;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
+import net.runelite.client.ui.overlay.components.LineComponent;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -12,8 +13,8 @@ public class BodReminderOverlay extends OverlayPanel {
     private final BodReminderConfig config;
     private final Client client;
 
-    private final string LONG_TEXT = "You need to retrieve your Book of the Dead!";
-    private final string SHORT_TEXT = "Book of the Dead";
+    private final String LONG_TEXT = "You need to retrieve your Book of the Dead!";
+    private final String SHORT_TEXT = "Book of the Dead";
 
     @Inject
     private BodReminderOverlay(Client client, BodReminderConfig config) {
@@ -61,7 +62,7 @@ public class BodReminderOverlay extends OverlayPanel {
 
         setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
 
-        if (config.reminderStyle() == ThrallHelperStyle.CUSTOM_TEXT) {
+        if (config.reminderStyle() == BodReminderStyle.CUSTOM_TEXT) {
             return super.render(graphics);
         } else {
             return panelComponent.render(graphics);

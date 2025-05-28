@@ -22,8 +22,8 @@ public class BodReminderInfobox  extends InfoBox {
     }
 
     @Override
-    public String getToolTip() {
-        return "You need to retrieve your Book of the Dead!";
+    public String getTooltip() {
+        return "You forgot your Book of the Dead!";
     }
 
 }
